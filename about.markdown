@@ -4,15 +4,8 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+I've worked in software since 2012, and am currently a Project Lead at [Custom Ink](https://www.customink.com). I live in [Richmond, Virginia](https://en.wikipedia.org/wiki/Richmond,_Virginia).
 
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
+You may find me writing about how we got here, where we're going, and on whose backs we're making the journey.
 
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
-
-
-[jekyll-organization]: https://github.com/jekyll
+And of course, the software, good and bad, we leave piled up behind us.
