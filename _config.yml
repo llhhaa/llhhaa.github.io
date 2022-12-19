@@ -21,7 +21,7 @@
 title: Luke Abel
 # email: luke.abel@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Heaps of code and history.
+  Hic Rhodus, hic salta!
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://llhhaa.github.io/" # the base hostname & protocol for your site, e.g. http://example.com
 # twitter_username: jekyllrb
