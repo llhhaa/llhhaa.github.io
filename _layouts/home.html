@@ -1,5 +1,7 @@
 ---
 layout: default
+feed_title: Shorter
+list_title: Longer
 ---
 
 <div class="home">
@@ -19,6 +21,7 @@ layout: default
   {% endif %}
 
 
+  <div class="list-wrapper">
   {%- if micros.size > 0 -%}
     {%- if page.feed_title -%}
       <h2 class="post-list-heading">{{ page.feed_title }}</h2>
@@ -77,5 +80,6 @@ layout: default
     {%- endif %}
 
   {%- endif -%}
+  </div>
 
 </div>
