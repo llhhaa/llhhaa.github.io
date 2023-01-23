@@ -1,0 +1,9 @@
+---
+layout: post
+title:  ''
+date:   2023-01-22 22:32:45 -0500
+categories: 
+published: true
+micro: true
+---
+In the spirit of the most productive writers having the lowest standards, I've added rudimentary support for "microposting", or in this case, posts without a title intended to be short enough to display in a feed in their entirely. The PR is [here](https://github.com/llhhaa/llhhaa.github.io/pull/2). Eventually I'll flesh this out into something more complete and do a proper post about it.
