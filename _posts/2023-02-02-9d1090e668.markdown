@@ -1,0 +1,9 @@
+---
+layout: post
+title:  ''
+date:   2023-02-02 12:37:43 -0500
+categories: 
+published: true
+micro: true
+---
+I'm trying to think of a microgenre name for listening to ambient music over work calls. Meetingwave? Zoomgaze? Remotesoft?
