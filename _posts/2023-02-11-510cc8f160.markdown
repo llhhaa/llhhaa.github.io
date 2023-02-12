@@ -1,0 +1,11 @@
+---
+layout: post
+title:  ''
+date:   2023-02-11 22:48:17 -0500
+categories: 
+published: true
+micro: true
+---
+Among the sea of ink spilled for ChatGPT, by far the most valuable drop is [Ted Chiang's essay in the New Yorker](https://www.newyorker.com/tech/annals-of-technology/chatgpt-is-a-blurry-jpeg-of-the-web). He clarifies, in reasonably low-tech language, what exactly it is that ChatGPT is doing when it responds to queries, and what its limits are.
+
+Chiang is correct when he says that it's not a threat to original writing or to the need to develop writing skills. But he does not explore the implication that those learning to write and AI models both produce unoriginal writing - it makes the distance one must travel to be A Writer, much less subsist on it, all the greater. The real threat of the AI-led mechanization of writing is that it vastly reduces the need of unoriginal human writers, and thus reduces the pool of potential original writers.
