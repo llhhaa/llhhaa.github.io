@@ -1,0 +1,14 @@
+---
+layout: post
+title:  ''
+date:   2023-04-05 12:10:33 -0400
+categories: 
+published: true
+micro: true
+---
+
+One of my favorite software analogies is ["water finds a crack"](https://www.designer-notes.com/?p=369), from Civ series designer Soren Johnson. The insight is that players will invariably discover game mechanics or strategies not intended by the designers. The interesting part is why players do this and the potential tradeoff. They do so not out of some abstract curiosity, but an optimization impulse. And the main currency these strategies trade in is _time_, often turning the game into an unfun grind.
+
+This raises a lot of interesting questions. Why do players optimize? Is it a timeless part of playing games, or a reflection of a historically-specific culture of optimization? And how is it that games invert our normal relationship with time, trading efficiency for game progress? What kind of cracks appear in non-game software systems, and how do they trade in time?
+
+For creators and players of games and programs, it's an incisive, pertinent observation and a fantastic prompt for further exploration.
