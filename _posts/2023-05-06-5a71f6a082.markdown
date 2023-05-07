@@ -1,0 +1,9 @@
+---
+layout: post
+title:  ''
+date:   2023-05-06 19:59:29 -0400
+categories: 
+published: true
+micro: true
+---
+["They took away our common lands and gave us commercial spaces. Then commerce moved online and those spaces were left to wither - so now we're all supposed to be nostalgic for the mall! And as social media withers - they'll expect us to be nostalgic for that!"](https://catandgirl.com/gnostalgia-2/)
