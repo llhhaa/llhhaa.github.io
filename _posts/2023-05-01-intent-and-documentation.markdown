@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Intent and Documentation"
-date:   2023-05-01 10:10:00 -0400
+title:  "Intent and documentation"
+date:   2023-05-01
 categories: programming documentation
 ---
 
