@@ -5,7 +5,7 @@ const STOPPED = /Stopped after 3 seconds/;
 const LOOP_TIMEOUT = { timeout: 6000 };
 
 const open = page => page.goto("/codingforgood1.html");
-const editor = page => page.locator("#code");
+const editor = page => page.getByRole("textbox", { name: "Code editor" });
 const output = page => page.locator("#out .line");
 const status = page => page.locator("#msg");
 const stepButton = (page, n) => page.getByRole("button", { name: `Step ${n}`, exact: true });
@@ -230,6 +230,16 @@ test.describe("saving", () => {
     await expect(stepButton(page, 3)).toHaveAttribute("aria-pressed", "true");
     await expect(editor(page)).toHaveValue((await starters(page))[2]);
   });
+
+  for (const saved of ["7", "-1", "1.5"]) {
+    test(`opens on step 1 when the saved step (${saved}) doesn't exist`, async ({ page }) => {
+      await page.addInitScript(value => localStorage.setItem("codingforgood1-current", value), saved);
+      await open(page);
+      await expect(stepButton(page, 1)).toHaveAttribute("aria-pressed", "true");
+      await expect(editor(page)).toHaveValue((await starters(page))[0]);
+      await expect(output(page)).toHaveText(STEP_1_OUTPUT);
+    });
+  }
 
   test("Reset restores the current step's starter code", async ({ page }) => {
     await runCode(page, "// broken");

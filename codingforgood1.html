@@ -29,7 +29,7 @@
 <div id="editor">
   <pre id="gutter" aria-hidden="true"></pre>
   <pre id="hl" aria-hidden="true"></pre>
-  <textarea id="code" spellcheck="false" wrap="off"></textarea>
+  <textarea id="code" aria-label="Code editor" spellcheck="false" wrap="off"></textarea>
 </div>
 <div id="out" role="log" aria-label="Output"></div>
 
@@ -181,6 +181,7 @@ const storage = {
 };
 
 let step = Number(storage.get(`${KEY}-current`)) || 0;
+if (!STARTERS[step]) step = 0;
 
 const TIME_LIMIT_SECONDS = 3;
 const MAX_LINES = 500;
