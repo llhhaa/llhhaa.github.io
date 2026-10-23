@@ -15,7 +15,11 @@
   .s{color:#0a7f3f}
   .k{color:#8250df}
   .n{color:#c2410c}
-  iframe{border:0;width:100%;height:100%;background:#111}
+  #out{height:100vh;overflow:auto;box-sizing:border-box;padding:12px 12px 60px;background:#111;color:#e8e8e8;
+       font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}
+  .line{white-space:pre-wrap;padding:2px 0;border-bottom:1px solid #1e1e1e}
+  .warn{color:#ffd166}
+  .err{color:#ff8a8a}
   #bar{position:fixed;bottom:0;left:0;right:0;background:#111;color:#fff;padding:8px;display:flex;gap:8px;align-items:center}
   #msg{opacity:.7;font-size:13px}
   #steps{display:flex;gap:4px;margin-right:12px}
@@ -27,7 +31,7 @@
   <pre id="hl" aria-hidden="true"></pre>
   <textarea id="code" spellcheck="false" wrap="off"></textarea>
 </div>
-<iframe id="out" title="Output"></iframe>
+<div id="out" role="log" aria-label="Output"></div>
 
 <div id="bar">
   <span id="steps"></span>
@@ -156,7 +160,7 @@ console.log(password.length == 10 && !password.includes(null) ? "Great password!
 </script>
 
 <script>
-const KEY = "console-practice-v1";
+const KEY = "codingforgood1";
 const ta  = document.getElementById("code");
 const hl  = document.getElementById("hl");
 const gutter = document.getElementById("gutter");
@@ -167,40 +171,28 @@ const STARTERS = [...document.querySelectorAll(".starter")].map(s => s.textConte
 const codeKey = n => `${KEY}-step${n}`;
 let step = Number(localStorage.getItem(`${KEY}-current`)) || 0;
 
-const SHIM = `
-<style>
-  body{margin:0;padding:12px;background:#111;color:#e8e8e8;
-       font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}
-  .line{white-space:pre-wrap;padding:2px 0;border-bottom:1px solid #1e1e1e}
-  .warn{color:#ffd166}
-  .err{color:#ff8a8a}
-</style>
-<div id="log"></div>
-<script>
-(function () {
-  var box = document.getElementById("log");
+const TIME_LIMIT_SECONDS = 3;
+const MAX_LINES = 500;
+
+// Runs in a Web Worker ahead of the student's code, so console output is sent back to this page.
+const PRELUDE = `(() => {
+  let lines = 0;
   function fmt(v) {
     if (typeof v === "string") return v;
-    if (v === undefined) return "undefined";
-    if (v === null) return "null";
-    try { return JSON.stringify(v); } catch (e) { return String(v); }
+    try { return JSON.stringify(v) ?? String(v); } catch (e) { return String(v); }
   }
   function show(kind, args) {
-    var line = document.createElement("div");
-    line.className = "line " + kind;
-    line.textContent = Array.prototype.map.call(args, fmt).join(" ");
-    box.appendChild(line);
+    lines++;
+    if (lines <= ${MAX_LINES}) self.postMessage({ kind, text: args.map(fmt).join(" ") });
+    else if (lines === ${MAX_LINES} + 1) self.postMessage({ kind: "warn", text: "✋ Too many lines! Only showing the first ${MAX_LINES}." });
   }
-  console.log = console.info = console.debug = function () { show("", arguments); };
-  console.warn  = function () { show("warn", arguments); };
-  console.error = function () { show("err", arguments); };
-  window.onerror = function (m, s, l) {
-    show("err", ["💥 " + m + (l ? " (line " + (l - (window.LINE_OFFSET || 0)) + ")" : "")]);
-    return true;
-  };
+  console.log = console.info = console.debug = (...args) => show("", args);
+  console.warn = (...args) => show("warn", args);
+  console.error = (...args) => show("err", args);
 })();
-<\/script>
 `;
+const LINE_OFFSET = PRELUDE.split("\n").length - 1;
+let worker, workerUrl, timer;
 
 const TOKENS = new RegExp([
   /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)/.source,
@@ -210,9 +202,6 @@ const TOKENS = new RegExp([
 ].join("|"), "g");
 
 const escapeHtml = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
-
-const PREFIX = '<!doctype html><html><head><meta charset="utf-8"></head><body>' + SHIM;
-const LINE_OFFSET = PREFIX.split("\n").length - 1;
 
 function render() {
   hl.innerHTML = escapeHtml(ta.value).replace(TOKENS, (m, comment, string, keyword) =>
@@ -235,10 +224,38 @@ function save() {
   localStorage.setItem(codeKey(step), ta.value);
 }
 
+function print(kind, text) {
+  const line = document.createElement("div");
+  line.className = `line ${kind}`;
+  line.textContent = text;
+  out.appendChild(line);
+}
+
+function stop() {
+  clearTimeout(timer);
+  worker?.terminate();
+  if (workerUrl) URL.revokeObjectURL(workerUrl);
+}
+
 function run() {
   save();
-  const safe = ta.value.replace(/<\/script/gi, "<\\/script");
-  out.srcdoc = `${PREFIX}<script>LINE_OFFSET=${LINE_OFFSET}<\/script><script>${safe}<\/script></body></html>`;
+  stop();
+  out.replaceChildren();
+
+  const source = `${PRELUDE}${ta.value}\nself.postMessage({ done: true });`;
+  workerUrl = URL.createObjectURL(new Blob([source], { type: "text/javascript" }));
+  worker = new Worker(workerUrl);
+  worker.onmessage = ({ data }) => data.done ? clearTimeout(timer) : print(data.kind, data.text);
+  worker.onerror = e => {
+    e.preventDefault();
+    clearTimeout(timer);
+    print("err", `💥 ${e.message}` + (e.lineno ? ` (line ${e.lineno - LINE_OFFSET})` : ""));
+  };
+  timer = setTimeout(() => {
+    worker.terminate();
+    print("err", `⏰ Stopped after ${TIME_LIMIT_SECONDS} seconds. Is there a loop that never ends?`);
+  }, TIME_LIMIT_SECONDS * 1000);
+
   msg.textContent = "saved in this browser";
 }
 
