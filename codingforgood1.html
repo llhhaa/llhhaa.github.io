@@ -169,7 +169,18 @@ const msg = document.getElementById("msg");
 const stepsBar = document.getElementById("steps");
 const STARTERS = [...document.querySelectorAll(".starter")].map(s => s.textContent.trim());
 const codeKey = n => `${KEY}-step${n}`;
-let step = Number(localStorage.getItem(`${KEY}-current`)) || 0;
+
+// localStorage throws when the browser blocks site data; the lesson should still work, just without saving.
+const storage = {
+  get(key) {
+    try { return localStorage.getItem(key); } catch { return null; }
+  },
+  set(key, value) {
+    try { localStorage.setItem(key, value); return true; } catch { return false; }
+  },
+};
+
+let step = Number(storage.get(`${KEY}-current`)) || 0;
 
 const TIME_LIMIT_SECONDS = 3;
 const MAX_LINES = 500;
@@ -221,7 +232,7 @@ function load(code) {
 }
 
 function save() {
-  localStorage.setItem(codeKey(step), ta.value);
+  return storage.set(codeKey(step), ta.value);
 }
 
 function print(kind, text) {
@@ -238,7 +249,7 @@ function stop() {
 }
 
 function run() {
-  save();
+  const saved = save();
   stop();
   out.replaceChildren();
 
@@ -256,7 +267,7 @@ function run() {
     print("err", `⏰ Stopped after ${TIME_LIMIT_SECONDS} seconds. Is there a loop that never ends?`);
   }, TIME_LIMIT_SECONDS * 1000);
 
-  msg.textContent = "saved in this browser";
+  msg.textContent = saved ? "saved in this browser" : "not saved — this browser is blocking storage, so use Copy my code";
 }
 
 function reset() {
@@ -266,8 +277,8 @@ function reset() {
 
 function showStep(n) {
   step = n;
-  localStorage.setItem(`${KEY}-current`, n);
-  load(localStorage.getItem(codeKey(n)) ?? STARTERS[n]);
+  storage.set(`${KEY}-current`, n);
+  load(storage.get(codeKey(n)) ?? STARTERS[n]);
   stepsBar.querySelectorAll("button").forEach((b, i) => b.setAttribute("aria-pressed", i === n));
   run();
 }
