@@ -280,9 +280,15 @@ document.querySelectorAll(".starter").forEach((s, i) => {
   stepsBar.appendChild(b);
 });
 
-function copyOut() {
-  navigator.clipboard.writeText(ta.value);
-  msg.textContent = `copied step ${step + 1} — paste it in the assignment`;
+async function copyOut() {
+  try {
+    await navigator.clipboard.writeText(ta.value);
+    msg.textContent = `copied step ${step + 1} — paste it in the assignment`;
+  } catch {
+    ta.focus();
+    ta.select();
+    msg.textContent = "couldn't copy — your code is selected, press Ctrl+C (⌘C on Mac) to copy it";
+  }
 }
 
 ta.addEventListener("input", () => { save(); render(); });
