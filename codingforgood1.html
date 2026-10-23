@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Console Practice</title>
+<style>
+  body{margin:0;font-family:system-ui,sans-serif;display:grid;grid-template-columns:1fr 1fr;height:100vh}
+  #editor{position:relative;border-right:1px solid #ddd}
+  #code,#hl{position:absolute;inset:0;margin:0;border:0;padding:12px 12px 60px;box-sizing:border-box;
+            font:14px/1.5 ui-monospace,monospace;white-space:pre;overflow:auto}
+  #code{background:transparent;color:transparent;caret-color:#000;resize:none}
+  #hl{overflow:hidden;pointer-events:none;color:#222}
+  .c{color:#8a8f98}
+  .s{color:#0a7f3f}
+  .k{color:#8250df}
+  .n{color:#c2410c}
+  iframe{border:0;width:100%;height:100%;background:#111}
+  #bar{position:fixed;bottom:0;left:0;right:0;background:#111;color:#fff;padding:8px;display:flex;gap:8px;align-items:center}
+  #msg{opacity:.7;font-size:13px}
+  #steps{display:flex;gap:4px;margin-right:12px}
+  #steps button[aria-pressed="true"]{background:#ffd166;font-weight:bold}
+</style>
+
+<div id="editor">
+  <pre id="hl" aria-hidden="true"></pre>
+  <textarea id="code" spellcheck="false" wrap="off"></textarea>
+</div>
+<iframe id="out" title="Output"></iframe>
+
+<div id="bar">
+  <span id="steps"></span>
+  <button onclick="run()">▶ Run (Ctrl+Enter)</button>
+  <button onclick="reset()">↺ Reset</button>
+  <button onclick="copyOut()">⧉ Copy my code</button>
+  <span id="msg"></span>
+</div>
+
+<script type="text/plain" class="starter" data-title="Rocket">
+// ===== STEP 1: Assigning variables =====
+
+// Change 0 to 10.
+let pwLength = 0;
+
+console.log("pwLength is ", pwLength);
+console.log(pwLength == 10 ? "Correct! ✅️" : "Try again...")
+</script>
+
+<script type="text/plain" class="starter" data-title="Step 2">
+// ===== STEP 2: Assigning to arrays =====
+
+let letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
+               'n','o','p','q','r','s','t','u','v','w','x','y','z',
+               'A','B','C','D','E','F','G','H','I','J','K','L','M',
+               'N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+
+// Change this line so that firstLetter is 'a'
+let firstLetter = letters[5];
+
+console.log("firstLetter is ", firstLetter);
+console.log(firstLetter == "a" ? "Correct! ✅️" : "Try again...")
+</script>
+
+<script type="text/plain" class="starter" data-title="Step 3">
+// ===== STEP 3: Pick something random =====
+
+let letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
+               'n','o','p','q','r','s','t','u','v','w','x','y','z',
+               'A','B','C','D','E','F','G','H','I','J','K','L','M',
+               'N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+
+// Picks one random thing from a list
+function pickRandom(list) {
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+// Just run it a few times and see what happens. Nothing to change!
+
+let randomLetter = pickRandom(letters);
+console.log("randomLetter is ", randomLetter);
+</script>
+
+<script type="text/plain" class="starter" data-title="Step 4">
+// ===== STEP 4: Fill the password, one box at a time =====
+
+let letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
+               'n','o','p','q','r','s','t','u','v','w','x','y','z',
+               'A','B','C','D','E','F','G','H','I','J','K','L','M',
+               'N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+let numbers = ['0','1','2','3','4','5','6','7','8','9'];
+let sChars  = ['!','@','#','$','%','^','&','*','(',')','-','+'];
+
+// Picks one random thing from a list
+function pickRandom(list) {
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+// Here is an empty password list.
+// We need to add letters, numbers, and symbols!
+
+let password = [null, null, null, null, null, null, null, null, null, null]
+
+// Copy the password[0] line and paste it 9 more times.
+// Change the box number:  password[1], password[2] ... password[9]
+// Use a mix of letters, numbers, and symbols
+
+password[0] = pickRandom(letters);
+
+console.log("Your list is ", password);
+console.log("Your password is ", password.join(""));
+console.log(password.length == 10 && !password.includes(null) ? "Great password!" : "Keep trying...");
+</script>
+
+<script type="text/plain" class="starter" data-title="Step 5">
+// ===== STEP 5: Use a loop! =====
+
+let letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
+               'n','o','p','q','r','s','t','u','v','w','x','y','z',
+               'A','B','C','D','E','F','G','H','I','J','K','L','M',
+               'N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+let numbers = ['0','1','2','3','4','5','6','7','8','9'];
+let sChars  = ['!','@','#','$','%','^','&','*','(',')','-','+'];
+
+// Picks one random thing from a list
+function pickRandom(list) {
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+// Here is an empty password list.
+// We need to add letters, numbers, and symbols!
+
+let password = [null, null, null, null, null, null, null, null, null, null]
+
+// Instead of:
+// 
+//      password[0] = pickRandom(letters);
+//      password[1] = pickRandom(letters);
+//      ...
+// 
+// We can use a LOOP.
+// In a loop, the value of `i` goes up each time: 0, 1, 2, 3...
+// Inside the loop, write ONE line that fills password[i] with a random letter.
+// Hint: password[i] = ...
+
+for (let i = 0; i < password.length; i++) {
+    // what goes here?
+}
+
+password[6] = pickRandom(numbers);
+password[7] = pickRandom(sChars);
+
+console.log("Your list is ", password);
+console.log("Your password is ", password.join(""));
+console.log(password.length == 10 && !password.includes(null) ? "Great password!" : "Keep trying...");
+</script>
+
+<script>
+const KEY = "console-practice-v1";
+const ta  = document.getElementById("code");
+const hl  = document.getElementById("hl");
+const out = document.getElementById("out");
+const msg = document.getElementById("msg");
+const stepsBar = document.getElementById("steps");
+const STARTERS = [...document.querySelectorAll(".starter")].map(s => s.textContent.trim());
+const codeKey = n => `${KEY}-step${n}`;
+let step = Number(localStorage.getItem(`${KEY}-current`)) || 0;
+
+const SHIM = `
+<style>
+  body{margin:0;padding:12px;background:#111;color:#e8e8e8;
+       font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}
+  .line{white-space:pre-wrap;padding:2px 0;border-bottom:1px solid #1e1e1e}
+  .warn{color:#ffd166}
+  .err{color:#ff8a8a}
+</style>
+<div id="log"></div>
+<script>
+(function () {
+  var box = document.getElementById("log");
+  function fmt(v) {
+    if (typeof v === "string") return v;
+    if (v === undefined) return "undefined";
+    if (v === null) return "null";
+    try { return JSON.stringify(v); } catch (e) { return String(v); }
+  }
+  function show(kind, args) {
+    var line = document.createElement("div");
+    line.className = "line " + kind;
+    line.textContent = Array.prototype.map.call(args, fmt).join(" ");
+    box.appendChild(line);
+  }
+  console.log = console.info = console.debug = function () { show("", arguments); };
+  console.warn  = function () { show("warn", arguments); };
+  console.error = function () { show("err", arguments); };
+  window.onerror = function (m, s, l) {
+    show("err", ["💥 " + m + (l ? " (line " + l + ")" : "")]);
+    return true;
+  };
+})();
+<\/script>
+`;
+
+const TOKENS = new RegExp([
+  /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)/.source,
+  /("(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*'|`(?:\\.|[^`\\])*`)/.source,
+  /\b(let|const|var|function|return|for|while|if|else|new|true|false|null|undefined)\b/.source,
+  /\b\d+(?:\.\d+)?\b/.source,
+].join("|"), "g");
+
+const escapeHtml = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+
+function highlight() {
+  hl.innerHTML = escapeHtml(ta.value).replace(TOKENS, (m, comment, string, keyword) =>
+    `<span class="${comment ? "c" : string ? "s" : keyword ? "k" : "n"}">${m}</span>`) + "\n";
+  syncScroll();
+}
+
+function syncScroll() {
+  hl.scrollTop = ta.scrollTop;
+  hl.scrollLeft = ta.scrollLeft;
+}
+
+function load(code) {
+  ta.value = code;
+  highlight();
+}
+
+function save() {
+  localStorage.setItem(codeKey(step), ta.value);
+}
+
+function run() {
+  save();
+  const safe = ta.value.replace(/<\/script/gi, "<\\/script");
+  out.srcdoc =
+    '<!doctype html><html><head><meta charset="utf-8"></head><body>' +
+    SHIM + "<scr" + "ipt>" + safe + "</scr" + "ipt></body></html>";
+  msg.textContent = "saved in this browser";
+}
+
+function reset() {
+  load(STARTERS[step]);
+  run();
+}
+
+function showStep(n) {
+  step = n;
+  localStorage.setItem(`${KEY}-current`, n);
+  load(localStorage.getItem(codeKey(n)) ?? STARTERS[n]);
+  stepsBar.querySelectorAll("button").forEach((b, i) => b.setAttribute("aria-pressed", i === n));
+  run();
+}
+
+document.querySelectorAll(".starter").forEach((s, i) => {
+  const b = document.createElement("button");
+  b.textContent = `Step ${i + 1}`;
+  b.title = s.dataset.title;
+  b.onclick = () => showStep(i);
+  stepsBar.appendChild(b);
+});
+
+function copyOut() {
+  navigator.clipboard.writeText(ta.value);
+  msg.textContent = `copied step ${step + 1} — paste it in the assignment`;
+}
+
+ta.addEventListener("input", () => { save(); highlight(); });
+ta.addEventListener("scroll", syncScroll);
+ta.addEventListener("keydown", e => {
+  if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); run(); }
+});
+showStep(step);
+</script>
+</html>
