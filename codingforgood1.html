@@ -200,10 +200,11 @@ const PRELUDE = `(() => {
   console.log = console.info = console.debug = (...args) => show("", args);
   console.warn = (...args) => show("warn", args);
   console.error = (...args) => show("err", args);
+  setTimeout(() => self.postMessage({ done: true }));
 })();
 `;
 const LINE_OFFSET = PRELUDE.split("\n").length - 1;
-let worker, workerUrl, timer;
+let worker, timer, workerUrls = [];
 
 const TOKENS = new RegExp([
   /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)/.source,
@@ -242,10 +243,38 @@ function print(kind, text) {
   out.appendChild(line);
 }
 
+function printError(message, line) {
+  print("err", `💥 ${message}` + (line > 0 ? ` (line ${line})` : ""));
+}
+
+function scriptUrl(source) {
+  const url = URL.createObjectURL(new Blob([source], { type: "text/javascript" }));
+  workerUrls.push(url);
+  return url;
+}
+
+function startWorker(source) {
+  worker?.terminate();
+  worker = new Worker(scriptUrl(source));
+  return worker;
+}
+
 function stop() {
   clearTimeout(timer);
   worker?.terminate();
-  if (workerUrl) URL.revokeObjectURL(workerUrl);
+  workerUrls.forEach(url => URL.revokeObjectURL(url));
+  workerUrls = [];
+}
+
+// Firefox and Safari don't say why a worker's script failed to parse, so parse the student's code alone to find out.
+// It already failed to parse, so it can't run; the run's time limit still applies just in case.
+function explainSyntaxError(code) {
+  const checker = startWorker(`try { importScripts("${scriptUrl(code)}"); }
+    catch (e) { self.postMessage({ message: e.name + ": " + e.message, line: e.lineNumber ?? e.line }); }`);
+  checker.onmessage = ({ data }) => {
+    clearTimeout(timer);
+    printError(data.message, data.line);
+  };
 }
 
 function run() {
@@ -253,14 +282,14 @@ function run() {
   stop();
   out.replaceChildren();
 
-  const source = `${PRELUDE}${ta.value}\nself.postMessage({ done: true });`;
-  workerUrl = URL.createObjectURL(new Blob([source], { type: "text/javascript" }));
-  worker = new Worker(workerUrl);
+  const code = ta.value;
+  startWorker(PRELUDE + code);
   worker.onmessage = ({ data }) => data.done ? clearTimeout(timer) : print(data.kind, data.text);
   worker.onerror = e => {
     e.preventDefault();
+    if (!e.message) return explainSyntaxError(code);
     clearTimeout(timer);
-    print("err", `💥 ${e.message}` + (e.lineno ? ` (line ${e.lineno - LINE_OFFSET})` : ""));
+    printError(e.message, e.lineno - LINE_OFFSET);
   };
   timer = setTimeout(() => {
     worker.terminate();
